@@ -105,6 +105,19 @@ static const Real DRAWABLE_OVERSCAN = 75.0f;  ///< 3D world coords of how much t
 constexpr const Real NearZ = MAP_XY_FACTOR; ///< Set the near to MAP_XY_FACTOR. Improves z buffer resolution.
 
 //-------------------------------------------------------------------------------------------------
+// Converts a horizontal field of view defined for a full 4:3 display into the horizontal field of
+// view of a viewport on the current display. The vertical field of view is kept, so wider displays
+// show more of the world to the sides instead of cropping it at the top and bottom.
+//-------------------------------------------------------------------------------------------------
+static Real calcHorizontalFieldOfView(Real fovAt4By3, Int viewWidth)
+{
+	const Real displayWidth = (Real)TheDisplay->getWidth();
+	const Real displayAspect = displayWidth / (Real)TheDisplay->getHeight();
+	const Real halfWidth = tan(fovAt4By3 * 0.5f) * (displayAspect / (4.0f / 3.0f)) * ((Real)viewWidth / displayWidth);
+	return 2.0f * atan(halfWidth);
+}
+
+//-------------------------------------------------------------------------------------------------
 // Normalizes angle to +- PI.
 //-------------------------------------------------------------------------------------------------
 static void normAngle(Real &angle)
@@ -183,6 +196,8 @@ W3DView::W3DView()
 
 	m_cameraAreaConstraints.zero();
 	m_recalcCamera = false;
+	m_terrainDrawSize.x = 0;
+	m_terrainDrawSize.y = 0;
 
 }
 
@@ -232,8 +247,8 @@ void W3DView::setWidth(Int width)
  	m_3DCamera->Set_Viewport(vMin,vMax);
 
 	//we want to maintain the same scale, so we'll need to adjust the fov.
-	//default W3D fov for full-screen is 50 degrees.
-	m_3DCamera->Set_View_Plane((Real)width/(Real)TheDisplay->getWidth()*DEG_TO_RADF(50.0f),-1);
+	//default W3D fov for full-screen 4:3 is 50 degrees.
+	m_3DCamera->Set_View_Plane(calcHorizontalFieldOfView(DEG_TO_RADF(50.0f), width), -1);
 
 	m_cameraAreaConstraintsValid = false;
 	m_recalcCamera = true;
@@ -268,7 +283,7 @@ void W3DView::buildCameraPosition( Vector3& sourcePos, Vector3& targetPos )
 {
 	const Real zoom = getZoom();
 	const Real angle = getAngle();
-	const Real pitch = getPitch();
+	const Real pitch = std::min(getPitch() + getStrategicPitchOffset(), DEG_TO_RADF(89.9f));
 	Coord3D pos = getPosition();
 
 	// add in the camera shake, if any
@@ -826,7 +841,7 @@ void W3DView::setCameraTransform(const Matrix3D &transform)
 	m_lastScreenToTerrainValid = false;
 
 #if defined(RTS_DEBUG)
-	m_3DCamera->Set_View_Plane( m_FOV, -1 );
+	m_3DCamera->Set_View_Plane( calcHorizontalFieldOfView(m_FOV, getWidth()), -1 );
 #endif
 
 	m_3DCamera->Set_Transform(transform);
@@ -2258,7 +2273,7 @@ void W3DView::setHeightAboveGround(Real z)
 // the camera height.
 void W3DView::setZoom(Real z)
 {
-	m_heightAboveGround = m_maxHeightAboveGround * z;
+	m_heightAboveGround = getTacticalMaxHeightAboveGround() * z;
 	m_zoom = getDesiredZoom(m_pos.x, m_pos.y);
 
 	stopDoingScriptedCamera();
@@ -2272,8 +2287,8 @@ void W3DView::setZoom(Real z)
 void W3DView::setZoomToDefault()
 {
 	// default zoom has to be max, otherwise players will just zoom to max always
-	m_heightAboveGround = m_maxHeightAboveGround;
-	m_zoom = getMaxZoom(m_pos.x, m_pos.y);
+	m_heightAboveGround = getTacticalMaxHeightAboveGround();
+	m_zoom = getDesiredZoom(m_pos.x, m_pos.y);
 
 	stopDoingScriptedCamera();
 	m_CameraArrivedAtWaypointOnPathFlag = false;
@@ -3718,7 +3733,7 @@ bool W3DView::getDesiredTerrainDrawSize(ICoord2D &dimensions) const
 
 	const Real cameraPitch = asin(fabs(m_3DCamera->Get_Forward_Dir().Z));
 
-	if (cameraPitch > ViewDefaultLowPitchRadians || !m_isUserControlled)
+	if (!m_isUserControlled)
 	{
 		// TheSuperHackers @info The scripted camera always uses the regular draw sizes
 		// and uses terrain oversize if it needs to enlarge.
@@ -3727,11 +3742,90 @@ bool W3DView::getDesiredTerrainDrawSize(ICoord2D &dimensions) const
 		return true;
 	}
 
-	// TheSuperHackers @tweak xezon 31/12/2025 Increases visible terrain area when lowering the camera pitch.
-	// Note: The default camera pitch in Generals was 37.5, which we prefer to keep the normal draw size for.
-	dimensions.x = WorldHeightMap::LOW_ANGLE_DRAW_WIDTH;
-	dimensions.y = WorldHeightMap::LOW_ANGLE_DRAW_HEIGHT;
+	if (cameraPitch <= ViewDefaultLowPitchRadians)
+	{
+		// TheSuperHackers @tweak xezon 31/12/2025 Increases visible terrain area when lowering the camera pitch.
+		// Note: The default camera pitch in Generals was 37.5, which we prefer to keep the normal draw size for.
+		dimensions.x = WorldHeightMap::LOW_ANGLE_DRAW_WIDTH;
+		dimensions.y = WorldHeightMap::LOW_ANGLE_DRAW_HEIGHT;
+		return true;
+	}
+
+	dimensions.x = WorldHeightMap::NORMAL_DRAW_WIDTH;
+	dimensions.y = WorldHeightMap::NORMAL_DRAW_HEIGHT;
+
+	// Grow the drawn terrain to cover the ground seen by the camera, so that high camera heights
+	// and wide aspect ratios do not reveal the edges of the drawn terrain.
+	ICoord2D footprint;
+	if (getTerrainFootprintSize(footprint))
+	{
+		const Int marginCells = VERTEX_BUFFER_TILE_LENGTH;
+		dimensions.x = std::max<Int>(dimensions.x, 1 + ((footprint.x + marginCells + VERTEX_BUFFER_TILE_LENGTH - 1) / VERTEX_BUFFER_TILE_LENGTH) * VERTEX_BUFFER_TILE_LENGTH);
+		dimensions.y = std::max<Int>(dimensions.y, 1 + ((footprint.y + marginCells + VERTEX_BUFFER_TILE_LENGTH - 1) / VERTEX_BUFFER_TILE_LENGTH) * VERTEX_BUFFER_TILE_LENGTH);
+	}
+
 	return true;
+}
+
+bool W3DView::getTerrainFootprintSize(ICoord2D &dimensions) const
+{
+	const Vector3 cameraPos = m_3DCamera->Get_Position();
+	const Real groundZ = TheTerrainRenderObject->getMinHeight();
+
+	if (cameraPos.Z <= groundZ)
+		return false;
+
+	Real minX = FLT_MAX;
+	Real maxX = -FLT_MAX;
+	Real minY = FLT_MAX;
+	Real maxY = -FLT_MAX;
+
+	for (Int i = 0; i < 4; ++i)
+	{
+		const Vector2 corner((i & 1) ? 1.0f : -1.0f, (i & 2) ? 1.0f : -1.0f);
+		Vector3 viewPlanePoint;
+		m_3DCamera->Un_Project(viewPlanePoint, corner);
+
+		const Vector3 dir = viewPlanePoint - cameraPos;
+		if (dir.Z >= 0.0f)
+			return false;
+
+		const Real t = (groundZ - cameraPos.Z) / dir.Z;
+		const Real x = cameraPos.X + dir.X * t;
+		const Real y = cameraPos.Y + dir.Y * t;
+
+		minX = std::min(minX, x);
+		maxX = std::max(maxX, x);
+		minY = std::min(minY, y);
+		maxY = std::max(maxY, y);
+	}
+
+	dimensions.x = REAL_TO_INT_CEIL((maxX - minX) / MAP_XY_FACTOR);
+	dimensions.y = REAL_TO_INT_CEIL((maxY - minY) / MAP_XY_FACTOR);
+	return true;
+}
+
+Real W3DView::getTacticalMaxHeightAboveGround() const
+{
+	const Real strategicZoomHeight = TheGlobalData->m_strategicZoomHeight;
+	const Real maxCameraHeight = TheGlobalData->m_maxCameraHeight;
+
+	if (strategicZoomHeight <= 0.0f || strategicZoomHeight >= maxCameraHeight)
+		return m_maxHeightAboveGround;
+
+	return m_maxHeightAboveGround * (strategicZoomHeight / maxCameraHeight);
+}
+
+Real W3DView::getStrategicPitchOffset() const
+{
+	const Real startHeight = getTacticalMaxHeightAboveGround();
+	const Real strategicPitch = TheGlobalData->m_strategicCameraPitch;
+
+	if (!m_isUserControlled || strategicPitch <= 0.0f || m_maxHeightAboveGround <= startHeight)
+		return 0.0f;
+
+	const Real t = clamp(0.0f, (m_currentHeightAboveGround - startHeight) / (m_maxHeightAboveGround - startHeight), 1.0f);
+	return t * (strategicPitch - m_defaultPitch);
 }
 
 void W3DView::updateTerrain()
@@ -3742,6 +3836,14 @@ void W3DView::updateTerrain()
 
 	if (getDesiredTerrainDrawSize(drawSize))
 	{
+		// Grow immediately, but only shrink by more than one tile at a time, to avoid rebuilding
+		// the terrain buffers repeatedly while the camera hovers around a size boundary.
+		if (drawSize.x < m_terrainDrawSize.x && drawSize.x >= m_terrainDrawSize.x - VERTEX_BUFFER_TILE_LENGTH)
+			drawSize.x = m_terrainDrawSize.x;
+		if (drawSize.y < m_terrainDrawSize.y && drawSize.y >= m_terrainDrawSize.y - VERTEX_BUFFER_TILE_LENGTH)
+			drawSize.y = m_terrainDrawSize.y;
+
+		m_terrainDrawSize = drawSize;
 		TheTerrainRenderObject->setTerrainDrawSize(drawSize.x, drawSize.y);
 	}
 

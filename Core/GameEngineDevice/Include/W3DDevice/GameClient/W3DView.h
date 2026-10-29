@@ -331,7 +331,12 @@ private:
 	void getAxisAlignedViewRegion(Region3D &axisAlignedRegion);	///< Find 3D Region enclosing all possible drawables.
 	void calcDeltaScroll(Coord2D &screenDelta);
 	bool getDesiredTerrainDrawSize(ICoord2D &dimensions) const;
+	bool getTerrainFootprintSize(ICoord2D &dimensions) const; ///< Size of the ground area seen by the camera, in terrain cells.
+	Real getTacticalMaxHeightAboveGround() const; ///< Highest camera height before the strategic zoom range.
+	Real getStrategicPitchOffset() const;
 	void updateTerrain();
+
+	ICoord2D m_terrainDrawSize; ///< Last terrain draw size requested from the terrain render object.
 
 	// (gth) C&C3 animation controlled camera feature
 	Bool				m_isCameraSlaved;

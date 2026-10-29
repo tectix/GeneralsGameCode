@@ -126,6 +126,14 @@ View *View::prependViewToList( View *list )
 
 void View::zoom( Real height )
 {
+	// Above the strategic zoom height, scale the zoom step with the height so the camera
+	// can travel across a very large height range in a reasonable number of steps.
+	const Real strategicZoomHeight = TheGlobalData->m_strategicZoomHeight;
+	if (strategicZoomHeight > 0.0f)
+	{
+		height *= std::max(1.0f, getHeightAboveGround() / strategicZoomHeight);
+	}
+
 	setHeightAboveGround(getHeightAboveGround() + height);
 }
 
