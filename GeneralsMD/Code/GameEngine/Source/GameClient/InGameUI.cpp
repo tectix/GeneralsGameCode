@@ -3790,6 +3790,7 @@ void InGameUI::postWindowDraw()
 //-------------------------------------------------------------------------------------------------
 void InGameUI::postDraw()
 {
+	TheGameClient->getLastKnownContacts().draw();
 
 	// render our display strings for the messages if on
 	if( m_messagesOn )

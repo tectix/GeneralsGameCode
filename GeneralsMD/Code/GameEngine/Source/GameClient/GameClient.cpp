@@ -451,6 +451,8 @@ void GameClient::reset()
 	// need to reset the in game UI to clear drawables before they are destroyed
 	TheInGameUI->reset();
 
+	m_lastKnownContacts.reset();
+
 	// destroy all Drawables
 	for( Drawable *draw = m_drawableList, *nextDraw = nullptr; draw; draw = nextDraw )
 	{
@@ -676,12 +678,18 @@ void GameClient::update()
 							ss = OBJECTSHROUD_CLEAR;
 						}
 					}
-					draw->setFullyObscuredByShroud(ss >= OBJECTSHROUD_FOGGED);
+					const Bool obscured = ss >= OBJECTSHROUD_FOGGED;
+					if (obscured != draw->getFullyObscuredByShroud() && draw->getShroudClearFrame() != InvalidShroudClearFrame)
+						m_lastKnownContacts.onObscuredChanged(object, obscured);
+
+					draw->setFullyObscuredByShroud(obscured);
 				}
 			}
 			draw->updateDrawable(timeScale);
 			draw = next;
 		}
+
+		m_lastKnownContacts.update();
 	}
 
 #if defined(RTS_DEBUG)

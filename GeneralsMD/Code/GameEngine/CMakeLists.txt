@@ -172,6 +172,7 @@ set(GAMEENGINE_SRC
 #    Include/GameClient/GadgetTabControl.h
 #    Include/GameClient/GadgetTextEntry.h
     Include/GameClient/GameClient.h
+    Include/GameClient/LastKnownContacts.h
 #    Include/GameClient/GameFont.h
     Include/GameClient/GameInfoWindow.h
 #    Include/GameClient/GameText.h
@@ -689,6 +690,7 @@ set(GAMEENGINE_SRC
     Source/GameClient/Eva.cpp
 #    Source/GameClient/FXList.cpp
     Source/GameClient/GameClient.cpp
+    Source/GameClient/LastKnownContacts.cpp
 #    Source/GameClient/GameClientDispatch.cpp
 #    Source/GameClient/GameText.cpp
 #    Source/GameClient/GlobalLanguage.cpp

@@ -35,6 +35,7 @@
 #include "Common/SubsystemInterface.h"
 #include "GameClient/CommandXlat.h"
 #include "GameClient/Drawable.h"
+#include "GameClient/LastKnownContacts.h"
 
 // forward declarations
 class AsciiString;
@@ -157,6 +158,8 @@ public:
 
 	static Bool isMovieAbortRequested();
 
+	LastKnownContacts &getLastKnownContacts() { return m_lastKnownContacts; }
+
 protected:
 
 	// snapshot methods
@@ -182,6 +185,7 @@ private:
 
 	Intro* m_intro;
 	UnsignedInt m_renderedObjectCount;													///< Keeps track of the number of rendered objects -- resets each frame.
+	LastKnownContacts m_lastKnownContacts;
 
 	//---------------------------------------------------------------------------
 
