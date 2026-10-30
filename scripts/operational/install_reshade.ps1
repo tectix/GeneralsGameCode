@@ -12,14 +12,15 @@ if (-not (Test-Path $setup)) {
     Invoke-WebRequest "https://reshade.me/downloads/ReShade_Setup_$Version.exe" -OutFile $setup -UseBasicParsing -UserAgent "Mozilla/5.0"
 }
 
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-$zip = [IO.Compression.ZipFile]::OpenRead($setup)
+# The setup is a self-extracting zip; Windows tar reads it, .NET's ZipFile does not.
+Push-Location $work
 try {
-    $entry = $zip.Entries | Where-Object Name -eq "ReShade32.dll"
-    [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, (Join-Path $GameDir "d3d8.dll"), $true)
+    & "$env:SystemRoot\System32\tar.exe" -xf $setup ReShade32.dll
+    if ($LASTEXITCODE -ne 0) { throw "Extracting ReShade32.dll failed" }
 } finally {
-    $zip.Dispose()
+    Pop-Location
 }
+Copy-Item (Join-Path $work "ReShade32.dll") (Join-Path $GameDir "d3d8.dll") -Force
 
 $shaders = Join-Path $GameDir "reshade-shaders"
 foreach ($repo in @(@{ Url = "https://github.com/crosire/reshade-shaders.git"; Branch = "slim"; Dir = "base" },
