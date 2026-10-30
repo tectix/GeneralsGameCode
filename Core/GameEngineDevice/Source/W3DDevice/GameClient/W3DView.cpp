@@ -684,7 +684,12 @@ Real W3DView::getCameraOffsetZ() const
 	}
 #endif
 
-	return m_pos.z + TheGlobalData->m_maxCameraHeight;
+	// Zoom is measured against the tactical height range, so UI scaled by zoom (health bars,
+	// floating text) keeps its retail size when the strategic zoom raises the max camera height.
+	const Real strategicZoomHeight = TheGlobalData->m_strategicZoomHeight;
+	const Real maxCameraHeight = TheGlobalData->m_maxCameraHeight;
+	const Real referenceHeight = (strategicZoomHeight > 0.0f && strategicZoomHeight < maxCameraHeight) ? strategicZoomHeight : maxCameraHeight;
+	return m_pos.z + referenceHeight;
 }
 
 //-------------------------------------------------------------------------------------------------
