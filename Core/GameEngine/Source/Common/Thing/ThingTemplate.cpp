@@ -1278,6 +1278,12 @@ void ThingTemplate::setCopiedFromDefault()
 void ThingTemplate::copyFromParent(const ThingTemplate* parent)
 {
 	copyFrom(parent);
+	setSetsReplaceable();
+}
+
+//-------------------------------------------------------------------------------------------------
+void ThingTemplate::setSetsReplaceable()
+{
 	m_armorCopiedFromDefault = true;
 	m_weaponsCopiedFromDefault = true;
 	m_prereqsCopiedFromParent = true;

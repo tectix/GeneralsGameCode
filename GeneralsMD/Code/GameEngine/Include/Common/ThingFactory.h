@@ -92,6 +92,7 @@ public:
 
 	static void parseObjectDefinition( INI* ini, const AsciiString& name, const AsciiString& reskinFrom );
 	static void parseObjectVariantDefinition( INI* ini, const AsciiString& name, const AsciiString& parentName );
+	static void parseObjectExtendDefinition( INI* ini, const AsciiString& name );
 
 private:
 

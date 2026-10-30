@@ -464,6 +464,23 @@ AsciiString TheThingTemplateBeingParsedName;
 	thingTemplate->validate();
 }
 
+//-------------------------------------------------------------------------------------------------
+/** Parse changes to an existing Object */
+//-------------------------------------------------------------------------------------------------
+/*static*/ void ThingFactory::parseObjectExtendDefinition( INI* ini, const AsciiString& name )
+{
+	ThingTemplate *thingTemplate = TheThingFactory->findTemplateInternal(name, FALSE);
+	if (!thingTemplate)
+	{
+		DEBUG_CRASH(("[LINE: %d in '%s'] ObjectExtend %s must come after the Object it extends.", ini->getLineNum(), ini->getFilename().str(), name.str()));
+		throw INI_INVALID_DATA;
+	}
+
+	thingTemplate->setSetsReplaceable();
+	ini->initFromINI(thingTemplate, thingTemplate->getFieldParse());
+	thingTemplate->validate();
+}
+
 //#define CHECK_THING_NAMES
 #ifdef CHECK_THING_NAMES
 

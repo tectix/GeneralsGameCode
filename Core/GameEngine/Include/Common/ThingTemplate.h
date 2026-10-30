@@ -607,6 +607,7 @@ public:
 
 	void setCopiedFromDefault();
 	void copyFromParent(const ThingTemplate* parent); ///< Copies everything from the parent; weapon sets, armor sets and prerequisites are replaced as a whole when redefined.
+	void setSetsReplaceable(); ///< Weapon sets, armor sets and prerequisites parsed next replace the existing ones as a whole.
 
 	void setReskinnedFrom(const ThingTemplate* tt) { DEBUG_ASSERTCRASH(m_reskinnedFrom == nullptr, ("should be null")); m_reskinnedFrom = tt; }
 

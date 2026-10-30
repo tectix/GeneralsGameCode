@@ -68,4 +68,13 @@ void INI::parseObjectVariantDefinition( INI* ini )
 	ThingFactory::parseObjectVariantDefinition(ini, name, parentName);
 }
 
+//-------------------------------------------------------------------------------------------------
+/** Parse changes to an existing Object */
+//-------------------------------------------------------------------------------------------------
+void INI::parseObjectExtendDefinition( INI* ini )
+{
+	AsciiString name = ini->getNextToken();
+	ThingFactory::parseObjectExtendDefinition(ini, name);
+}
+
 

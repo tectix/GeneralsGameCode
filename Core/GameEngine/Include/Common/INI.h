@@ -199,6 +199,7 @@ public:
 	static void parseObjectDefinition( INI *ini );
 	static void parseObjectReskinDefinition( INI *ini );
 	static void parseObjectVariantDefinition( INI *ini );
+	static void parseObjectExtendDefinition( INI *ini );
 	static void parseWeaponTemplateDefinition( INI *ini );
 	static void parseScienceDefinition( INI *ini );
 	static void parseRankDefinition( INI *ini );
