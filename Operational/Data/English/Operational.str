@@ -47,3 +47,59 @@ END
 CONTROLBAR:TC_ToolTipBuildLongRangeScud
 "Fires a single heavy SCUD at very long range. The longest reload in the arsenal."
 END
+
+OBJECT:TC_ScoutHumvee
+"Scout Humvee"
+END
+
+OBJECT:TC_RadarOutpost
+"Radar Outpost"
+END
+
+OBJECT:TC_ObservationVan
+"Observation Van"
+END
+
+OBJECT:TC_AirDefenseBattery
+"Air Defense Battery"
+END
+
+OBJECT:TC_ForwardOperatingBase
+"Forward Operating Base"
+END
+
+UPGRADE:TC_PrecisionFires
+"Precision Fires"
+END
+
+CONTROLBAR:TC_ConstructScout
+"&Scout"
+END
+
+CONTROLBAR:TC_ToolTipBuildScout
+"Light vehicle with very long sight. Spots targets for long-range fire support."
+END
+
+CONTROLBAR:TC_ConstructAirDefense
+"&Air Defense Battery"
+END
+
+CONTROLBAR:TC_ToolTipBuildAirDefense
+"Long-range surface-to-air missiles. Shoots down aircraft and incoming cruise missiles and SCUDs. Needs resupply."
+END
+
+CONTROLBAR:TC_UpgradePrecisionFires
+"&Precision Fires"
+END
+
+CONTROLBAR:TC_ToolTipUpgradePrecisionFires
+"Long-range artillery and missiles gain 25% range and 15% damage."
+END
+
+CONTROLBAR:TC_ConstructForwardBase
+"Forward &Operating Base"
+END
+
+CONTROLBAR:TC_ToolTipBuildForwardBase
+"Forward supply depot. Accepts supply deliveries, builds supply vehicles and resupplies units in a wide radius."
+END
