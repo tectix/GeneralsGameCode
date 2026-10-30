@@ -1,0 +1,49 @@
+// Theater Command strings. Labels here take priority over the retail string table.
+
+OBJECT:TC_FiresCommand
+"Fires Command"
+END
+
+OBJECT:TC_TheaterMissileLauncher
+"Theater Missile Launcher"
+END
+
+OBJECT:TC_HeavyHowitzer
+"Heavy Howitzer"
+END
+
+OBJECT:TC_LongRangeScud
+"Long-Range SCUD"
+END
+
+CONTROLBAR:TC_ConstructFiresCommand
+"&Fires Command"
+END
+
+CONTROLBAR:TC_ToolTipBuildFiresCommand
+"Builds long-range fire support units. Their weapons outrange their own vision, so pair them with scouts and radar."
+END
+
+CONTROLBAR:TC_ConstructTheaterMissileLauncher
+"&Theater Missile Launcher"
+END
+
+CONTROLBAR:TC_ToolTipBuildTheaterMissileLauncher
+"Fires one cruise missile at targets up to four times the range of a Tomahawk. Long reload."
+END
+
+CONTROLBAR:TC_ConstructHeavyHowitzer
+"&Heavy Howitzer"
+END
+
+CONTROLBAR:TC_ToolTipBuildHeavyHowitzer
+"Slow-firing long-range artillery. Accurate against structures and massed vehicles, needs spotting."
+END
+
+CONTROLBAR:TC_ConstructLongRangeScud
+"&Long-Range SCUD"
+END
+
+CONTROLBAR:TC_ToolTipBuildLongRangeScud
+"Fires a single heavy SCUD at very long range. The longest reload in the arsenal."
+END
