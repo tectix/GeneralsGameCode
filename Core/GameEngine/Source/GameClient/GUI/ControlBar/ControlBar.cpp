@@ -2024,16 +2024,9 @@ CommandButton *ControlBar::newCommandButtonOverride( CommandButton *buttonToOver
 	}
 	else if( ini->getLoadType() != INI_LOAD_CREATE_OVERRIDES )
 	{
-		//Holy crap, this sucks to debug!!!
-		//If you have two different command sets, the previous
-		//code would simply allow you to define multiple command set
-		//with the same name, and just nuke the old button with the new one.
-		//So, I (KM) have added this assert to notify in case of two same-name
-		//command set.
-		DEBUG_CRASH(( "[LINE: %d in '%s'] Duplicate commandset %s found!", ini->getLineNum(), ini->getFilename().str(), name.str() ));
-		throw INI_INVALID_DATA;
-
-		//@todo SUPPORT OVERRIDES -- JM
+		// A later definition of an existing command set patches it: only the slots it names change.
+		// This lets data files add buttons to existing command sets without repeating them.
+		DEBUG_LOG(( "[LINE: %d in '%s'] Patching commandset %s.", ini->getLineNum(), ini->getFilename().str(), name.str() ));
 	} else {
 		commandSet = TheControlBar->newCommandSetOverride(commandSet);
 	}
