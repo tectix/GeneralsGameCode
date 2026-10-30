@@ -67,3 +67,5 @@ build.ninja
 ## Python
 __pycache__/
 *.pyc
+# Models derived from retail art stay local
+Operational/ArtLocal/
