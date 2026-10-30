@@ -606,6 +606,7 @@ public:
 	Real getFactoryExtraBibWidth() const { return m_factoryExtraBibWidth; }
 
 	void setCopiedFromDefault();
+	void copyFromParent(const ThingTemplate* parent); ///< Copies everything from the parent; weapon sets, armor sets and prerequisites are replaced as a whole when redefined.
 
 	void setReskinnedFrom(const ThingTemplate* tt) { DEBUG_ASSERTCRASH(m_reskinnedFrom == nullptr, ("should be null")); m_reskinnedFrom = tt; }
 
@@ -765,6 +766,7 @@ private:
 	Bool					m_isForbidden;								///< useful when overriding in <mapfile>.ini
 	Bool					m_armorCopiedFromDefault;
 	Bool					m_weaponsCopiedFromDefault;
+	Bool					m_prereqsCopiedFromParent;
 
 	// ---- Byte-sized things
 	Byte					m_radarPriority;						///< does object appear on radar, and if so at what priority

@@ -440,6 +440,30 @@ AsciiString TheThingTemplateBeingParsedName;
 #endif
 }
 
+//-------------------------------------------------------------------------------------------------
+/** Parse an Object that starts as a full copy of an existing Object */
+//-------------------------------------------------------------------------------------------------
+/*static*/ void ThingFactory::parseObjectVariantDefinition( INI* ini, const AsciiString& name, const AsciiString& parentName )
+{
+	const ThingTemplate* parent = TheThingFactory->findTemplate(parentName);
+	if (!parent)
+	{
+		DEBUG_CRASH(("ObjectVariant must come after its parent Object (%s, %s).", parentName.str(), name.str()));
+		throw INI_INVALID_DATA;
+	}
+
+	if (TheThingFactory->findTemplateInternal(name, FALSE))
+	{
+		DEBUG_CRASH(("[LINE: %d in '%s'] ObjectVariant %s already exists.", ini->getLineNum(), ini->getFilename().str(), name.str()));
+		throw INI_INVALID_DATA;
+	}
+
+	ThingTemplate *thingTemplate = TheThingFactory->newTemplate(name);
+	thingTemplate->copyFromParent(parent);
+	ini->initFromINI(thingTemplate, thingTemplate->getFieldParse());
+	thingTemplate->validate();
+}
+
 //#define CHECK_THING_NAMES
 #ifdef CHECK_THING_NAMES
 

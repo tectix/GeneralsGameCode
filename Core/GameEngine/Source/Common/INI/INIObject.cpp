@@ -58,4 +58,14 @@ void INI::parseObjectReskinDefinition( INI* ini )
 	ThingFactory::parseObjectDefinition(ini, name, reskinFrom);
 }
 
+//-------------------------------------------------------------------------------------------------
+/** Parse an Object that starts as a full copy of an existing Object */
+//-------------------------------------------------------------------------------------------------
+void INI::parseObjectVariantDefinition( INI* ini )
+{
+	AsciiString name = ini->getNextToken();
+	AsciiString parentName = ini->getNextToken();
+	ThingFactory::parseObjectVariantDefinition(ini, name, parentName);
+}
+
 

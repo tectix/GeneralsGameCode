@@ -691,9 +691,10 @@ void ThingTemplate::parsePrerequisites( INI* ini, void *instance, void *store, c
 		{ nullptr, nullptr, nullptr, 0 }
 	};
 
-	if (ini->getLoadType() == INI_LOAD_CREATE_OVERRIDES)
+	if (ini->getLoadType() == INI_LOAD_CREATE_OVERRIDES || self->m_prereqsCopiedFromParent)
 	{
 		self->m_prereqInfo.clear();
+		self->m_prereqsCopiedFromParent = false;
 	}
 
 	ini->initFromINI(&self->m_prereqInfo, myFieldParse);
@@ -1015,6 +1016,7 @@ ThingTemplate::ThingTemplate() :
 {
 	m_moduleParsingMode = MODULEPARSE_NORMAL;
 	m_reskinnedFrom = nullptr;
+	m_prereqsCopiedFromParent = false;
 	m_radarPriority = RADAR_PRIORITY_INVALID;
 
 	m_nextThingTemplate = nullptr;
@@ -1270,6 +1272,15 @@ void ThingTemplate::setCopiedFromDefault()
 	m_behaviorModuleInfo.setCopiedFromDefault(true);
 	m_drawModuleInfo.setCopiedFromDefault(true);
 	m_clientUpdateModuleInfo.setCopiedFromDefault(true);
+}
+
+//-------------------------------------------------------------------------------------------------
+void ThingTemplate::copyFromParent(const ThingTemplate* parent)
+{
+	copyFrom(parent);
+	m_armorCopiedFromDefault = true;
+	m_weaponsCopiedFromDefault = true;
+	m_prereqsCopiedFromParent = true;
 }
 
 //-------------------------------------------------------------------------------------------------

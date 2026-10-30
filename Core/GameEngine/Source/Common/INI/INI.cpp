@@ -131,6 +131,7 @@ static const BlockParse theTypeTable[] =
 	{ "Object",                         INI::parseObjectDefinition },
 	{ "ObjectCreationList",             INI::parseObjectCreationListDefinition },
 	{ "ObjectReskin",                   INI::parseObjectReskinDefinition },
+	{ "ObjectVariant",                  INI::parseObjectVariantDefinition },
 	{ "OnlineChatColors",               INI::parseOnlineChatColorDefinition },
 	{ "ParticleSystem",                 INI::parseParticleSystemDefinition },
 	{ "PlayerTemplate",                 INI::parsePlayerTemplateDefinition },
