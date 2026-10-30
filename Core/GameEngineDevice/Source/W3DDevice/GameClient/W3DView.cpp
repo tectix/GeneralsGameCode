@@ -2154,9 +2154,10 @@ void W3DView::scrollBy( const Coord2D *delta )
 		world.Z = worldEnd.Z - worldStart.Z;
 
 		// scroll by delta
+		const Real scrollScale = getScrollHeightScale();
 		Coord2D pos = getPosition2D();
-		pos.x += world.X;
-		pos.y += world.Y;
+		pos.x += world.X * scrollScale;
+		pos.y += world.Y * scrollScale;
 		//DEBUG_LOG(("Delta %.2f, %.2f", world.X, world.Z));
 		setPosition2D(pos);
 
@@ -3814,6 +3815,24 @@ Real W3DView::getTacticalMaxHeightAboveGround() const
 		return m_maxHeightAboveGround;
 
 	return m_maxHeightAboveGround * (strategicZoomHeight / maxCameraHeight);
+}
+
+Real W3DView::getScrollHeightScale() const
+{
+	if (TheGlobalData->m_strategicZoomHeight <= 0.0f)
+		return 1.0f;
+
+	return std::max(1.0f, m_currentHeightAboveGround / getTacticalMaxHeightAboveGround());
+}
+
+void W3DView::toggleStrategicView()
+{
+	const Real tacticalMax = getTacticalMaxHeightAboveGround();
+	if (m_maxHeightAboveGround <= tacticalMax)
+		return;
+
+	const Bool isStrategic = m_heightAboveGround > tacticalMax * 1.05f;
+	setHeightAboveGround(isStrategic ? tacticalMax : m_maxHeightAboveGround);
 }
 
 Real W3DView::getStrategicPitchOffset() const

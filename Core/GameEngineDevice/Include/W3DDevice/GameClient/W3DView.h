@@ -216,6 +216,7 @@ public:
 	virtual void setHeightAboveGround(Real z) override;
 	virtual void setZoom(Real z) override;
 	virtual void setZoomToDefault() override;									///< Set zoom to default value
+	virtual void toggleStrategicView() override;
 
 	virtual void setFieldOfView( Real angle ) override;							///< Set the horizontal field of view angle
 
@@ -333,6 +334,7 @@ private:
 	bool getDesiredTerrainDrawSize(ICoord2D &dimensions) const;
 	bool getTerrainFootprintSize(ICoord2D &dimensions) const; ///< Size of the ground area seen by the camera, in terrain cells.
 	Real getTacticalMaxHeightAboveGround() const; ///< Highest camera height before the strategic zoom range.
+	Real getScrollHeightScale() const;
 	Real getStrategicPitchOffset() const;
 	void updateTerrain();
 

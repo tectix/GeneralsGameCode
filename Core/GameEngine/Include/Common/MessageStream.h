@@ -274,6 +274,7 @@ public:
 		MSG_META_BEGIN_CAMERA_ZOOM_OUT,
 		MSG_META_END_CAMERA_ZOOM_OUT,
 		MSG_META_CAMERA_RESET,
+		MSG_META_TOGGLE_STRATEGIC_VIEW,							///< Switch the camera between the tactical and the strategic height
     MSG_META_TOGGLE_CAMERA_TRACKING_DRAWABLE,
 		MSG_META_TOGGLE_FAST_FORWARD_REPLAY,				///< Toggle the fast forward feature
 		MSG_META_TOGGLE_PAUSE,											///< TheSuperHackers @feature Toggle game pause

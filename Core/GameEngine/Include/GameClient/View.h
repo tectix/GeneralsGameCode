@@ -210,6 +210,7 @@ public:
 	virtual void zoom( Real height ); ///< Zoom in/out, closer to the ground, limit to min, or farther away from the ground, limit to max
 	virtual void setZoomToDefault() { m_zoom  = 1.0f; } ///< Set zoom to default value
 	virtual void setOkToAdjustHeight( Bool val ) { m_okToAdjustHeight = val; }	///< Set this to adjust camera height
+	virtual void toggleStrategicView() {} ///< Switch between the tactical and the strategic camera height
 
 	// TheSuperHackers @info Functions to call for user camera controls, not by the scripted camera.
 	Bool userSetPosition(const Coord3D &pos)             { return doUserAction(&View::setPosition, pos); }
@@ -221,6 +222,7 @@ public:
 	Bool userZoom(Real height)                           { return doUserAction(&View::zoom, height); }
 	Bool userSetZoom(Real z)                             { return doUserAction(&View::setZoom, z); }
 	Bool userSetZoomToDefault()                          { return doUserAction(&View::setZoomToDefault); }
+	Bool userToggleStrategicView()                       { return doUserAction(&View::toggleStrategicView); }
 	Bool userSetFieldOfView(Real angle)                  { return doUserAction(&View::setFieldOfView, angle); }
 	Bool userLookAt(const Coord3D *o)                    { return doUserAction(&View::lookAt, o); }
 	Bool userResetPivotToGround()                        { return doUserAction(&View::resetPivotToGround); }

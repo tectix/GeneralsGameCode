@@ -3526,6 +3526,9 @@ GameMessageDisposition CommandTranslator::translateGameMessage(const GameMessage
 		case GameMessage::MSG_META_CAMERA_RESET:
 			TheInGameUI->resetCamera();
 			break;
+		case GameMessage::MSG_META_TOGGLE_STRATEGIC_VIEW:
+			TheTacticalView->userToggleStrategicView();
+			break;
 		case GameMessage::MSG_META_TOGGLE_CAMERA_TRACKING_DRAWABLE:
 			TheInGameUI->setCameraTrackingDrawable( true );
 			break;

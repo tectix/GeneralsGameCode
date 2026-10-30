@@ -183,6 +183,7 @@ static const LookupListRec GameMessageMetaTypeNames[] =
 	{ "BEGIN_CAMERA_ZOOM_OUT",										GameMessage::MSG_META_BEGIN_CAMERA_ZOOM_OUT },
 	{ "END_CAMERA_ZOOM_OUT",											GameMessage::MSG_META_END_CAMERA_ZOOM_OUT },
 	{ "CAMERA_RESET",															GameMessage::MSG_META_CAMERA_RESET },
+	{ "TOGGLE_STRATEGIC_VIEW",										GameMessage::MSG_META_TOGGLE_STRATEGIC_VIEW },
 	{ "TOGGLE_CAMERA_TRACKING_DRAWABLE",					GameMessage::MSG_META_TOGGLE_CAMERA_TRACKING_DRAWABLE },
 	{ "TOGGLE_FAST_FORWARD_REPLAY",								GameMessage::MSG_META_TOGGLE_FAST_FORWARD_REPLAY },
 	{ "TOGGLE_PAUSE",															GameMessage::MSG_META_TOGGLE_PAUSE },
