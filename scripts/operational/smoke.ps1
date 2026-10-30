@@ -45,7 +45,8 @@ if ($process.HasExited) {
     exit 1
 }
 
-$titles = [GameWindows]::Titles($process.Id)
+# d3d8to9 creates a D3DProxyWindow next to the game window.
+$titles = @([GameWindows]::Titles($process.Id) | Where-Object { $_ -ne "D3DProxyWindow" })
 $crashAfter = if (Test-Path $crashLog) { (Get-Item $crashLog).LastWriteTime } else { $null }
 
 if ($titles.Count -ne 1 -or $titles[0] -match "Technical Difficulties|Error" -or $crashAfter -ne $crashBefore) {
