@@ -1,6 +1,7 @@
 param(
     [string]$GameDir = "A:\SteamLibrary\steamapps\common\Command & Conquer Generals - Zero Hour",
-    [string]$Version = "6.8.0"
+    [string]$Version = "6.8.0",
+    [string]$D3D8To9Version = "1.16.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,7 +21,15 @@ try {
 } finally {
     Pop-Location
 }
-Copy-Item (Join-Path $work "ReShade32.dll") (Join-Path $GameDir "d3d8.dll") -Force
+# ReShade has no Direct3D 8 entry point. d3d8to9 translates the game to Direct3D 9 as
+# d3d8.dll and loads d3d9.dll from the game folder first, which is ReShade.
+Copy-Item (Join-Path $work "ReShade32.dll") (Join-Path $GameDir "d3d9.dll") -Force
+
+$d3d8to9 = Join-Path $work "d3d8to9-$D3D8To9Version.dll"
+if (-not (Test-Path $d3d8to9)) {
+    Invoke-WebRequest "https://github.com/crosire/d3d8to9/releases/download/v$D3D8To9Version/d3d8.dll" -OutFile $d3d8to9 -UseBasicParsing
+}
+Copy-Item $d3d8to9 (Join-Path $GameDir "d3d8.dll") -Force
 
 $shaders = Join-Path $GameDir "reshade-shaders"
 foreach ($repo in @(@{ Url = "https://github.com/crosire/reshade-shaders.git"; Branch = "slim"; Dir = "base" },
@@ -53,4 +62,4 @@ TutorialProgress=4
 "@ | Set-Content $ini -Encoding ascii
 }
 
-Write-Output "ReShade $Version installed as d3d8.dll in $GameDir (Home opens the overlay)"
+Write-Output "Installed d3d8to9 $D3D8To9Version (d3d8.dll) and ReShade $Version (d3d9.dll) in $GameDir (Home opens the overlay)"
