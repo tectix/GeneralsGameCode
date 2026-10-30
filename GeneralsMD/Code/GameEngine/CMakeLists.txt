@@ -349,6 +349,7 @@ set(GAMEENGINE_SRC
     Include/GameLogic/Module/KeepObjectDie.h
     Include/GameLogic/Module/LaserUpdate.h
     Include/GameLogic/Module/LifetimeUpdate.h
+    Include/GameLogic/Module/SupplySourceUpdate.h
     Include/GameLogic/Module/LockWeaponCreate.h
     Include/GameLogic/Module/LocomotorSetUpgrade.h
     Include/GameLogic/Module/MaxHealthUpgrade.h
@@ -1012,6 +1013,7 @@ set(GAMEENGINE_SRC
     Source/GameLogic/Object/Update/HordeUpdate.cpp
     Source/GameLogic/Object/Update/LaserUpdate.cpp
     Source/GameLogic/Object/Update/LifetimeUpdate.cpp
+    Source/GameLogic/Object/Update/SupplySourceUpdate.cpp
     Source/GameLogic/Object/Update/MissileLauncherBuildingUpdate.cpp
     Source/GameLogic/Object/Update/MobMemberSlavedUpdate.cpp
     Source/GameLogic/Object/Update/NeutronMissileSlowDeathUpdate.cpp

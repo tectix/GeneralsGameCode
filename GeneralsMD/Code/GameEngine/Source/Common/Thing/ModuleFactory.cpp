@@ -142,6 +142,7 @@
 #include "GameLogic/Module/BaikonurLaunchPower.h"
 #include "GameLogic/Module/BattlePlanUpdate.h"
 #include "GameLogic/Module/LifetimeUpdate.h"
+#include "GameLogic/Module/SupplySourceUpdate.h"
 #include "GameLogic/Module/RadiusDecalUpdate.h"
 #include "GameLogic/Module/AutoDepositUpdate.h"
 #include "GameLogic/Module/MissileAIUpdate.h"
@@ -396,6 +397,7 @@ void ModuleFactory::init()
 	addModule( ToppleUpdate );
 	addModule( EnemyNearUpdate );
 	addModule( LifetimeUpdate );
+	addModule( SupplySourceUpdate );
 	addModule( RadiusDecalUpdate );
 	addModule( EMPUpdate );
   addModule( LeafletDropBehavior );

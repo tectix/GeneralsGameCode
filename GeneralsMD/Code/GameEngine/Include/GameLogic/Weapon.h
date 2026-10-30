@@ -58,6 +58,7 @@ enum WeaponReloadType CPP_11(: Int)
 	AUTO_RELOAD,
 	NO_RELOAD,
 	RETURN_TO_BASE_TO_RELOAD,
+	RESUPPLY_TO_RELOAD,				///< Stays empty until a SupplySourceUpdate in range reloads it.
 
 	WEAPON_RELOAD_COUNT
 };
@@ -68,6 +69,7 @@ static const char *const TheWeaponReloadNames[] =
 	"YES",
 	"NO",
 	"RETURN_TO_BASE",
+	"RESUPPLY",
 	nullptr
 };
 static_assert(ARRAY_SIZE(TheWeaponReloadNames) == WEAPON_RELOAD_COUNT + 1, "Incorrect array size");
