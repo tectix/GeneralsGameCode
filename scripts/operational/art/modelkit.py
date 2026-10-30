@@ -223,6 +223,8 @@ def render_preview(path, target=(0, 0, 10), distance=170.0, elevation=32.0, azim
     scene.render.resolution_x = 1280
     scene.render.resolution_y = 720
     scene.render.filepath = path
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.image_settings.color_mode = "RGB"
 
     world = bpy.data.worlds.new("World")
     world.use_nodes = True
