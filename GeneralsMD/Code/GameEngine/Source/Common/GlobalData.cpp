@@ -193,6 +193,8 @@ GlobalData* GlobalData::m_theOriginal = nullptr;
 	{ "MinCameraHeight",						INI::parseReal,				nullptr,			offsetof( GlobalData, m_minCameraHeight ) },
 	{ "StrategicZoomHeight",				INI::parseReal,				nullptr,			offsetof( GlobalData, m_strategicZoomHeight ) },
 	{ "StrategicCameraPitch",				INI::parseAngleReal,	nullptr,			offsetof( GlobalData, m_strategicCameraPitch ) },
+	{ "BuildTimeScale",						INI::parseReal,				nullptr,			offsetof( GlobalData, m_buildTimeScale ) },
+	{ "BuildCostScale",						INI::parseReal,				nullptr,			offsetof( GlobalData, m_buildCostScale ) },
 	{ "LastKnownContactDuration",		INI::parseReal,				nullptr,			offsetof( GlobalData, m_lastKnownContactDuration ) },
 	{ "TerrainHeightAtEdgeOfMap",					INI::parseReal,				nullptr,			offsetof( GlobalData, m_terrainHeightAtEdgeOfMap ) },
 	{ "UnitDamagedThreshold",				INI::parseReal,				nullptr,			offsetof( GlobalData, m_unitDamagedThresh ) },
@@ -859,6 +861,8 @@ GlobalData::GlobalData()
 	m_maxCameraHeight = 300.0f;
 	m_strategicZoomHeight = 0.0f;
 	m_strategicCameraPitch = 0.0f;
+	m_buildTimeScale = 1.0f;
+	m_buildCostScale = 1.0f;
 	m_lastKnownContactDuration = 0.0f;
 	m_terrainHeightAtEdgeOfMap = 0.0f;
 

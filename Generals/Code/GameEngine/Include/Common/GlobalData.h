@@ -196,6 +196,8 @@ public:
 	Real m_minCameraHeight;
 	Real m_strategicZoomHeight;	///< Camera height above which zoom steps scale with height and the pitch blends toward m_strategicCameraPitch. 0 disables.
 	Real m_strategicCameraPitch;	///< Camera pitch reached at m_maxCameraHeight. 0 disables.
+	Real m_buildTimeScale;	///< Multiplies the build time of everything.
+	Real m_buildCostScale;	///< Multiplies the build cost of everything.
 	Real m_terrainHeightAtEdgeOfMap;
 	Real m_unitDamagedThresh;
 	Real m_unitReallyDamagedThresh;
