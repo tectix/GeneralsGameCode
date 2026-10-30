@@ -12,8 +12,10 @@ foreach ($name in "generalszh", "WorldBuilderZH", "W3DViewZH") {
 robocopy "$PSScriptRoot\..\..\Operational\Data" "$GameDir\Data" /E /NFL /NDL /NJH /NJS | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "Copying operational data failed with robocopy code $LASTEXITCODE" }
 
-$artLocal = "$PSScriptRoot\..\..\Operational\ArtLocal\Art"
-if (Test-Path $artLocal) {
-    robocopy $artLocal "$GameDir\Art" /E /NFL /NDL /NJH /NJS | Out-Null
-    if ($LASTEXITCODE -ge 8) { throw "Copying local art failed with robocopy code $LASTEXITCODE" }
+foreach ($art in "Art", "ArtLocal") {
+    $source = "$PSScriptRoot\..\..\Operational\$art\Art"
+    if (Test-Path $source) {
+        robocopy $source "$GameDir\Art" /E /NFL /NDL /NJH /NJS | Out-Null
+        if ($LASTEXITCODE -ge 8) { throw "Copying $art failed with robocopy code $LASTEXITCODE" }
+    }
 }
